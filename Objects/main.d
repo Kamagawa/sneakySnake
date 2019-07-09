@@ -16,7 +16,4 @@
 .\objects\main.o: src\uart.h
 .\objects\main.o: src\random.h
 .\objects\main.o: src\lfsr113.h
-.\objects\main.o: src\main.h
-.\objects\main.o: src\LCD.h
-.\objects\main.o: src\POT.h
-.\objects\main.o: src\JOY.h
+.\objects\main.o: src\GLCD.h

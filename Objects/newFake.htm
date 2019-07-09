@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\newFake.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\newFake.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060528: Last Updated: Mon Jul 08 23:46:28 2019
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 5060528: Last Updated: Tue Jul 09 12:23:09 2019
 <BR><P>
 <H3>Maximum Stack Usage =        168 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -470,11 +470,11 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[3b]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GLCD_Clear
 </UL>
 
-<P><STRONG><a name="[5e]"></a>JOYvalue</STRONG> (Thumb, 34 bytes, Stack size 0 bytes, joy.o(i.JOYvalue))
+<P><STRONG><a name="[5e]"></a>JOYvalue</STRONG> (Thumb, 34 bytes, Stack size 0 bytes, main.o(i.JOYvalue))
 <BR><BR>[Called By]<UL><LI><a href="#[2d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[4c]"></a>LCDdraw</STRONG> (Thumb, 118 bytes, Stack size 32 bytes, lcd.o(i.LCDdraw))
+<P><STRONG><a name="[4c]"></a>LCDdraw</STRONG> (Thumb, 106 bytes, Stack size 32 bytes, main.o(i.LCDdraw))
 <BR><BR>[Stack]<UL><LI>Max Depth = 72<LI>Call Chain = LCDdraw &rArr; GLCD_PutPixel &rArr; wr_reg &rArr; wr_dat
 </UL>
 <BR>[Calls]<UL><LI><a href="#[4d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;codeToColor
@@ -484,7 +484,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[2d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[4f]"></a>LCDinit</STRONG> (Thumb, 32 bytes, Stack size 8 bytes, lcd.o(i.LCDinit))
+<P><STRONG><a name="[4f]"></a>LCDinit</STRONG> (Thumb, 32 bytes, Stack size 8 bytes, main.o(i.LCDinit))
 <BR><BR>[Stack]<UL><LI>Max Depth = 88<LI>Call Chain = LCDinit &rArr; GLCD_Clear &rArr; GLCD_WindowMax &rArr; GLCD_SetWindow &rArr; wr_reg &rArr; wr_dat
 </UL>
 <BR>[Calls]<UL><LI><a href="#[4e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GLCD_SetTextColor
@@ -495,7 +495,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[2d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[51]"></a>LCDoops</STRONG> (Thumb, 26 bytes, Stack size 8 bytes, lcd.o(i.LCDoops))
+<P><STRONG><a name="[51]"></a>LCDoops</STRONG> (Thumb, 26 bytes, Stack size 8 bytes, main.o(i.LCDoops))
 <BR><BR>[Stack]<UL><LI>Max Depth = 168<LI>Call Chain = LCDoops &rArr; GLCD_DisplayString &rArr; GLCD_DisplayChar &rArr; GLCD_DrawChar &rArr; GLCD_SetWindow &rArr; wr_reg &rArr; wr_dat
 </UL>
 <BR>[Calls]<UL><LI><a href="#[4e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;GLCD_SetTextColor
@@ -508,7 +508,7 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[36]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osRtxTick_Handler
 </UL>
 
-<P><STRONG><a name="[5d]"></a>POTinit</STRONG> (Thumb, 48 bytes, Stack size 0 bytes, pot.o(i.POTinit))
+<P><STRONG><a name="[5d]"></a>POTinit</STRONG> (Thumb, 48 bytes, Stack size 0 bytes, main.o(i.POTinit))
 <BR><BR>[Called By]<UL><LI><a href="#[2d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
@@ -558,7 +558,7 @@ Global Symbols
 
 <P><STRONG><a name="[92]"></a>__scatterload_zeroinit</STRONG> (Thumb, 14 bytes, Stack size unknown bytes, handlers.o(i.__scatterload_zeroinit), UNUSED)
 
-<P><STRONG><a name="[4d]"></a>codeToColor</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, lcd.o(i.codeToColor))
+<P><STRONG><a name="[4d]"></a>codeToColor</STRONG> (Thumb, 26 bytes, Stack size 0 bytes, main.o(i.codeToColor))
 <BR><BR>[Called By]<UL><LI><a href="#[4c]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCDdraw
 </UL>
 
@@ -670,8 +670,8 @@ Global Symbols
 <P><STRONG><a name="[72]"></a>osRtxThreadSwitch</STRONG> (Thumb, 24 bytes, Stack size 8 bytes, rtx_thread.o(i.osRtxThreadSwitch))
 <BR><BR>[Stack]<UL><LI>Max Depth = 16<LI>Call Chain = osRtxThreadSwitch &rArr; osRtxThreadStackCheck
 </UL>
-<BR>[Calls]<UL><LI><a href="#[76]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EvrRtxThreadSwitched
-<LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osRtxThreadStackCheck
+<BR>[Calls]<UL><LI><a href="#[74]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osRtxThreadStackCheck
+<LI><a href="#[76]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EvrRtxThreadSwitched
 </UL>
 <BR>[Called By]<UL><LI><a href="#[36]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osRtxTick_Handler
 <LI><a href="#[5f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;osRtxThreadDispatch

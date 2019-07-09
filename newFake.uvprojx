@@ -410,21 +410,6 @@
               <FileType>1</FileType>
               <FilePath>.\src\main.c</FilePath>
             </File>
-            <File>
-              <FileName>LCD.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\LCD.c</FilePath>
-            </File>
-            <File>
-              <FileName>POT.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\POT.c</FilePath>
-            </File>
-            <File>
-              <FileName>JOY.c</FileName>
-              <FileType>1</FileType>
-              <FilePath>.\src\JOY.c</FilePath>
-            </File>
           </Files>
         </Group>
         <Group>

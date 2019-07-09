@@ -6,10 +6,28 @@
 #include <stdbool.h>
 #include <lpc17xx.h>
 #include <cmsis_os2.h>
+#include <lpc17xx.h>
 #include "uart.h"
 #include "random.h"
-#include "main.h"
-#include "LCD.h"
-#include "POT.h"
-#include "JOY.h"
+#include "GLCD.h"
+
+
+int LCDinit();
+int LCDdraw();
+int LCDoops();
+
+// finish everything later maybe score? maybe edge border? 
+int LCDborder();
+int score(int score);
+
+
+int POTinit();
+int POTvalue();
+
+// Joy stick 
+int JOYvalue();
+
+
 #endif
+
+
