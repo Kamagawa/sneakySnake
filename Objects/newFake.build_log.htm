@@ -42,19 +42,19 @@ src\main.h(25): warning:  #1295-D: Deprecated declaration POTvalue - give arg ty
   int POTvalue();
 src\main.h(28): warning:  #1295-D: Deprecated declaration JOYvalue - give arg types
   int JOYvalue();
-src\main.c(38): warning:  #223-D: function "game" declared implicitly
+src\main.c(48): warning:  #223-D: function "game" declared implicitly
   	game();
-src\main.c(50): warning:  #111-D: statement is unreachable
+src\main.c(60): warning:  #111-D: statement is unreachable
   	return 0;
-src\main.c(88): warning:  #177-D: variable "prev_h_r"  was declared but never referenced
-  		int prev_h_r = h_r, prev_h_c = h_c;
-src\main.c(88): warning:  #177-D: variable "prev_h_c"  was declared but never referenced
-  		int prev_h_r = h_r, prev_h_c = h_c;
-src\main.c(126): warning:  #111-D: statement is unreachable
+src\main.c(123): warning:  #940-D: missing return statement at end of non-void function "processfood" 
+  }
+src\main.c(141): warning:  #940-D: missing return statement at end of non-void function "generateFood" 
+  }
+src\main.c(197): warning:  #111-D: statement is unreachable
   	return 0;
 src\main.c: 12 warnings, 0 errors
 linking...
-Program Size: Code=6800 RO-data=6724 RW-data=5200 ZI-data=11392  
+Program Size: Code=7704 RO-data=6724 RW-data=5212 ZI-data=11396  
 ".\Objects\newFake.axf" - 0 Error(s), 12 Warning(s).
 
 <h2>Software Packages used:</h2>
@@ -91,39 +91,39 @@ Package Vendor: Keil
       Source file:   Device\Source\system_LPC17xx.c
 
    * Component: ARM::CMSIS:RTOS2:Keil RTX5:Source:5.3.0
-      Source file:   CMSIS\RTOS2\RTX\Source\ARM\irq_cm3.s
-      Source file:   CMSIS\RTOS2\RTX\Template\Semaphore.c
-      Source file:   CMSIS\RTOS2\RTX\Template\MemPool.c
-      Source file:   CMSIS\RTOS2\RTX\Template\Thread.c
+      Source file:   CMSIS\RTOS2\RTX\Template\MsgQueue.c
       Source file:   CMSIS\RTOS2\RTX\Template\Events.c
       Source file:   CMSIS\RTOS2\RTX\Template\Mutex.c
+      Source file:   CMSIS\RTOS2\RTX\Template\MemPool.c
+      Source file:   CMSIS\RTOS2\RTX\Template\Semaphore.c
+      Source file:   CMSIS\RTOS2\RTX\Template\Thread.c
       Source file:   CMSIS\RTOS2\RTX\Template\Timer.c
-      Include file:  CMSIS\RTOS2\RTX\Include\rtx_os.h
-      Include file:  CMSIS\RTOS2\RTX\Config\RTX_Config.h
-      Source file:   CMSIS\RTOS2\RTX\Template\MsgQueue.c
-      Source file:   CMSIS\RTOS2\RTX\Template\main.c
-      Source file:   CMSIS\RTOS2\RTX\Config\RTX_Config.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_evflags.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_memory.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_mempool.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_kernel.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_evr.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_system.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_timer.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_mutex.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_lib.c
       Source file:   CMSIS\RTOS2\RTX\Template\svc_user.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_thread.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_delay.c
+      Include file:  CMSIS\RTOS2\RTX\Config\RTX_Config.h
+      Source file:   CMSIS\RTOS2\RTX\Template\main.c
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_kernel.c
+      Source file:   CMSIS\RTOS2\RTX\Config\RTX_Config.c
+      Include file:  CMSIS\RTOS2\RTX\Include\rtx_os.h
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_timer.c
       Source file:   CMSIS\RTOS2\RTX\Source\rtx_semaphore.c
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_mutex.c
+      Source file:   CMSIS\RTOS2\RTX\Source\ARM\irq_cm3.s
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_thread.c
       Source file:   CMSIS\RTOS2\RTX\Source\rtx_msgqueue.c
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_evr.c
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_mempool.c
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_lib.c
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_memory.c
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_delay.c
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_system.c
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_evflags.c
       Source file:   CMSIS\RTOS2\Source\os_systick.c
 
    * Component: ARM::CMSIS:CORE:5.1.1
 
    * Component: ::CMSIS:RTOS2:2.1.2 (API)
       Include file:  CMSIS\RTOS2\Include\cmsis_os2.h
-Build Time Elapsed:  00:00:02
+Build Time Elapsed:  00:00:01
 </pre>
 </body>
 </html>

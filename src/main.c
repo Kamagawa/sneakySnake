@@ -10,18 +10,28 @@
 
 // food size: 1,2,4,5 no more 
 unsigned char position[EDGE_R][EDGE_C] = {0}; 
-int speed = 10, direction = 4, size = 2, nSize=1;
-int h_r = 22, h_c = 32, t_r = 22, t_c = 33; 
+int speed = 10, direction = 4, size = 4, nSize=1;
+int h_r = 22, h_c = 32, t_r = 22, t_c = 33, f_r=22, f_c=10; 
 bool loose = false;
 
 int init(){ 
 	loose = false;
 	position[22][32]='P';
 	position[22][33]='P';
+	position[22][9]='Y';
+	position[22][11]='Y';
+	position[21][10]='Y';
+	position[23][10]='Y';
+	f_r=22; 
+	f_c=10; 
 	speed = 10;
   direction = 4;
   h_r = 22, h_c = 32; 
 	return 0;
+}
+
+int gibRando(int lower, int upper) { 
+    return (rand() % (upper - lower + 1)) + lower; 
 }
 
 int main () { 
@@ -80,27 +90,90 @@ int moveHead(int unit){
 		}
 	return unit;
 }
+
+// imagine the food as 3*3 blocks
+// dangerous but do random
+// size is global
+bool validFood(int a, int b){ 
+	if(a == -1){
+		return false;
+	} else if(size>2){
+			return !position[a][b] && !position[a-1][b] && !position[a+1][b]
+				&& !position[a][b+1] && !position[a][b-1];
+	} else if (size ==2){
+		return !position[a][b+1];
+	} 
+	return !position[a][b];
+}
+
+int processfood(int a, int b, bool action){
+	char m = (action? 'Y': 1);
+	if(size==1) {
+		position[a][b] = m;
+	} else if(size==2){
+		position[a][b] = m;
+		position[a][b+1] = m;
+	} else if (size == 4 || size ==5) {
+		position[a][b+1] = m;
+		position[a][b-1] = m;
+		position[a+1][b] = m;
+		position[a-1][b] = m;
+		if (size==5) position[a][b] = m;
+	} 
+}
+	
+int generateFood(){ 
+	// getNext Size and compute next next size. 
+	size = nSize; 
+	nSize = gibRando(1, 5);
+	if (nSize == 3) nSize=1;
+	
+	// do shit to the LED
+	
+	
+	
+	int row = -1, col = -1;
+	while (!validFood(row, col)){
+		int row = gibRando(1, EDGE_R-2);
+		int col = gibRando(1, EDGE_C-2);
+	}
+	processfood(row,col, true);
+}
 int game(){ 
 	init();
 	
 	while(true) { 
-		 // 1. first find new head new position: 4, 2. 1 3
-		int prev_h_r = h_r, prev_h_c = h_c;
-		// 2. move head
-		moveHead(1);
+		// A. move
+		char suppose = position[h_r][h_c];
+		printf("%c \n", suppose);
+		int prev_h_r = h_r, prev_h_c = h_c; // 1. get new head
+		moveHead(1);		// 2. move head
 		if(h_r>=0 && h_r<48 && h_c >=0 && h_c<64)
 			position[h_r][h_c] = 'P';
-		// 3. move tail
-		snakeTraverser();
+		snakeTraverser();		// 3. move tail
 		
-		
-		
+		// B. eat
 		// check if food is eaten, if eaten update size and food
-		if(position[h_r][h_c] == 'X'){
+		
+		if(suppose == 'X'){
+			printf("FUCK");
+			moveHead(size);
+			
+			//1. clear first
+			processfood(h_r, h_c, false);
+			int a = MIN(h_r, prev_h_r),b = MAX(h_r, prev_h_r);
+			for (int i =a; i <b; i++){
+				if(i<EDGE_R && i>=0)position[i][h_c] = 'P';
+			}		
+			a = MIN(h_c, prev_h_c),b = MAX(h_c, prev_h_c);
+			for (int i =a; i <b; i++){
+				if(i<EDGE_C && i>=0) position[h_r][i] = 'P';
+			}
+			
+			generateFood();
 				//1. add length of coresponding block
 				//2. set all food to blank
 				//3. set corresponding snake to block
-				
 		}
 		
 		if(h_r<0 || h_c<0 || h_r>=EDGE_R || h_c >=EDGE_C){
@@ -111,13 +184,11 @@ int game(){
 		LCDdraw();
 		
 		osDelay(osKernelGetSysTimerFreq()*100);
-		int man = 1;
+		int man = 1000000;
 		while(man>0){
 			if(loose) man = 100;
 			man--;
-			printf("R");
 		}
-		printf("\n");
 	}
 	
 	
