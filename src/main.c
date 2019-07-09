@@ -7,14 +7,17 @@
 // 0 - empty
 // 1 - body 
 // 10 - food
-int position[48][64] = {0}; 
-int speed = 10;
-int direction = 4;
+
+// food size: 1,2,4,5 no more 
+unsigned char position[EDGE_R][EDGE_C] = {0}; 
+int speed = 10, direction = 4, size = 2, nSize=1;
 int h_r = 22, h_c = 32, t_r = 22, t_c = 33; 
+bool loose = false;
 
 int init(){ 
-	position[22][32]=1;
-	position[22][33]=1;
+	loose = false;
+	position[22][32]='P';
+	position[22][33]='P';
 	speed = 10;
   direction = 4;
   h_r = 22, h_c = 32; 
@@ -27,25 +30,12 @@ int main () {
 	// test cases here:
 	printf("cute \n");
 	
-	position[22][32]=1;
-	position[22][33]=1;
 	
-	LCDinit();
-	LCDdraw();
-	LCDoops();
-	
+	LCDinit();	
 	POTinit();
 	
-	while(1) { 
-		/* POT works
-		int obtained = POTvalue();
-		printf("POT: %d \n", obtained);
-		*/ 
-		
-		/* JOY works */
-		int dir = JOYvalue();
-		printf("DIR: %d \n", dir);
-	}
+	
+	game();
 	
 	// init os Kernel 
 	
@@ -63,23 +53,20 @@ int main () {
 
 
 
-int snakeTraverser(int h_r, int h_c, int c_r, int c_c) {
-	bool changes = false;
+int snakeTraverser() {
+	
 	// find in four direction, excluding previous to find tail
 	for(int i=-1; i<=1;i++) { 
-		for(int j=-j;i<=j;j++) { 
-			if (i||j || i*i+j*j==2 || (c_r+i==h_r && c_c+j ==h_c)) { 
+		for(int j=-1;j<=1;j++) { 
+			if ((!i&&!j) || i*i+j*j==2) { 
 				// skip 1. (0,0) 2. corners like (1,1) 3. equals last block
 				continue;
-			} else if (position[c_r+i][c_r+j] > 0) { 
-				changes = true;
-				snakeTraverser(c_r, c_c, c_r+i, c_c+j);
+			} else if (position[t_r+i][t_c+j] == 'O') { 
+				position[t_r][t_c]= 1;
+				t_r = t_r+i;
+				t_c = t_c+j;
 			}
 		}
-	}
-	// tail here 
-	if (!changes){
-		position[c_r][c_c] = 0;
 	}
 	return 0;
 }
@@ -99,14 +86,38 @@ int game(){
 	while(true) { 
 		 // 1. first find new head new position: 4, 2. 1 3
 		int prev_h_r = h_r, prev_h_c = h_c;
-		moveHead(1);
 		// 2. move head
+		moveHead(1);
 		if(h_r>=0 && h_r<48 && h_c >=0 && h_c<64)
-			position[h_r][h_c] = 1;
+			position[h_r][h_c] = 'P';
 		// 3. move tail
-		snakeTraverser(prev_h_c, prev_h_r, h_r, h_c);
-		// check if food is eaten, if eaten update size and food
+		snakeTraverser();
 		
+		
+		
+		// check if food is eaten, if eaten update size and food
+		if(position[h_r][h_c] == 'X'){
+				//1. add length of coresponding block
+				//2. set all food to blank
+				//3. set corresponding snake to block
+				
+		}
+		
+		if(h_r<0 || h_c<0 || h_r>=EDGE_R || h_c >=EDGE_C){
+			 loose = true;
+			 LCDoops();
+		}
+		
+		LCDdraw();
+		
+		osDelay(osKernelGetSysTimerFreq()*100);
+		int man = 1;
+		while(man>0){
+			if(loose) man = 100;
+			man--;
+			printf("R");
+		}
+		printf("\n");
 	}
 	
 	
@@ -128,29 +139,41 @@ int LCDinit(){
 // set color for body or food or other shits 
 int codeToColor(int xd) { 
 	switch(xd){
+		case 0: return White;
 		case 1: return Blue;
 		case 10: return Cyan;
 		// add more colors here:
 		default: return 0;
 	}
 }
+void tool(int i, int j, int color) { 
+	int off_r = i*5, off_c = j*5;
+	GLCD_SetTextColor(color);
+	for (int a=0; a <5; a++) { 
+		for (int b=0; b<5; b++) { 
+			GLCD_PutPixel(off_c+b, off_r+a);
+		}
+	}
+}
 
 int LCDdraw() { 
 	// iterate matrix
-	for (int i=0; i <48; i++) { 
-		for (int j=0; j<64; j++) { 
-			
-			// fill up square
-			if(position[i][j]) {
-				int off_r = i*5, off_c = j*5;
-				GLCD_SetTextColor(codeToColor(position[i][j]));
-				for (int a=0; a <5; a++) { 
-					for (int b=0; b<5; b++) { 
-						GLCD_PutPixel(off_c+b, off_r+a);
-					}
-				}
+	for (int i=0; i <30; i++) { 
+		for (int j=0; j<52; j++) {
+			if (position[i][j]==1){
+				position[i][j] = 0;
+				tool(i,j, White);
+				// GLCD_DisplayString(i,j,0, &blank);
+			} else if (position[i][j]=='P'){
+				position[i][j] = 'O';
+				tool(i,j, Blue);
+				//GLCD_DisplayString(i,j,0, &position[i][j]);
+			} else if (position[i][j]=='Y'){
+				position[i][j] = 'X';
+				tool(i,j, Red);
+				//GLCD_DisplayString(i,j,0, &position[i][j]);
 			}
-		}
+		}		
 	}
 	return 0;
 }

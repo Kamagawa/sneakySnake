@@ -31,3 +31,6 @@ int JOYvalue();
 #endif
 
 
+#define EDGE_R 48
+#define EDGE_C 64
+
