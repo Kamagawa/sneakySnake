@@ -7,7 +7,6 @@
 #include <lpc17xx.h>
 #include <cmsis_os2.h>
 #include <lpc17xx.h>
-#include <time.h>
 #include "uart.h"
 #include "random.h"
 #include "GLCD.h"
@@ -24,10 +23,10 @@ int score(int score);
 
 int POTinit();
 int POTvalue();
-int game();
+void game();
 
 // Joy stick 
-int JOYvalue();
+void JOYvalue();
 
 
 #endif

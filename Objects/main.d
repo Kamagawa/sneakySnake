@@ -13,7 +13,6 @@
 .\objects\main.o: C:\Software\Keil_v5\ARM\PACK\Keil\LPC1700_DFP\2.4.0\Device\Include\system_LPC17xx.h
 .\objects\main.o: C:\Software\Keil_v5\ARM\PACK\ARM\CMSIS\5.3.0\CMSIS\RTOS2\Include\cmsis_os2.h
 .\objects\main.o: C:\Software\Keil_v5\ARM\ARMCC\Bin\..\include\stddef.h
-.\objects\main.o: C:\Software\Keil_v5\ARM\ARMCC\Bin\..\include\time.h
 .\objects\main.o: src\uart.h
 .\objects\main.o: src\random.h
 .\objects\main.o: src\lfsr113.h

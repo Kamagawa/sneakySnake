@@ -26,24 +26,30 @@ Project File Date:  07/11/2019
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 5 (build 528)', folder: 'C:\Software\Keil_v5\ARM\ARMCC\Bin'
-Build target 'Target 1'
+Rebuild target 'Target 1'
+compiling random.c...
+compiling lfsr113.c...
+compiling Retarget.c...
+compiling GLCD_SPI_LPC1700.c...
+compiling uart.c...
+assembling irq_cm3.s...
 compiling main.c...
-src\main.h(16): warning:  #1295-D: Deprecated declaration LCDinit - give arg types
+src\main.h(15): warning:  #1295-D: Deprecated declaration LCDinit - give arg types
   int LCDinit();
-src\main.h(17): warning:  #1295-D: Deprecated declaration LCDdraw - give arg types
+src\main.h(16): warning:  #1295-D: Deprecated declaration LCDdraw - give arg types
   int LCDdraw();
-src\main.h(18): warning:  #1295-D: Deprecated declaration LCDoops - give arg types
+src\main.h(17): warning:  #1295-D: Deprecated declaration LCDoops - give arg types
   int LCDoops();
-src\main.h(21): warning:  #1295-D: Deprecated declaration LCDborder - give arg types
+src\main.h(20): warning:  #1295-D: Deprecated declaration LCDborder - give arg types
   int LCDborder();
-src\main.h(25): warning:  #1295-D: Deprecated declaration POTinit - give arg types
+src\main.h(24): warning:  #1295-D: Deprecated declaration POTinit - give arg types
   int POTinit();
-src\main.h(26): warning:  #1295-D: Deprecated declaration POTvalue - give arg types
+src\main.h(25): warning:  #1295-D: Deprecated declaration POTvalue - give arg types
   int POTvalue();
-src\main.h(27): warning:  #1295-D: Deprecated declaration game - give arg types
-  int game();
-src\main.h(30): warning:  #1295-D: Deprecated declaration JOYvalue - give arg types
-  int JOYvalue();
+src\main.h(26): warning:  #1295-D: Deprecated declaration game - give arg types
+  void game();
+src\main.h(29): warning:  #1295-D: Deprecated declaration JOYvalue - give arg types
+  void JOYvalue();
 src\peripheral.h(11): warning:  #1295-D: Deprecated declaration LCDinit - give arg types
   int LCDinit();
 src\peripheral.h(17): warning:  #1295-D: Deprecated declaration LCDdraw - give arg types
@@ -54,23 +60,51 @@ src\peripheral.h(23): warning:  #1295-D: Deprecated declaration POTinit - give a
   int POTinit();
 src\peripheral.h(26): warning:  #1295-D: Deprecated declaration POTvalue - give arg types
   int POTvalue();
-src\peripheral.h(30): warning:  #1295-D: Deprecated declaration JOYvalue - give arg types
-  int JOYvalue();
-src\peripheral.h(33): warning:  #1-D: last line of file ends without a newline
+src\peripheral.h(32): warning:  #1295-D: Deprecated declaration lightInit - give arg types
+  void lightInit();
+src\peripheral.h(34): warning:  #1-D: last line of file ends without a newline
   #endif
 src\main.c(61): warning:  #111-D: statement is unreachable
   	return 0;
-src\main.c(212): warning:  #111-D: statement is unreachable
-  	return 0;
-src\main.c(233): warning:  #1-D: last line of file ends without a newline
+src\main.c(251): warning:  #1-D: last line of file ends without a newline
   }
-src\main.c: 18 warnings, 0 errors
+src\main.c: 17 warnings, 0 errors
+compiling peripheral.c...
+src\peripheral.h(11): warning:  #1295-D: Deprecated declaration LCDinit - give arg types
+  int LCDinit();
+src\peripheral.h(17): warning:  #1295-D: Deprecated declaration LCDdraw - give arg types
+  int LCDdraw();
+src\peripheral.h(19): warning:  #1295-D: Deprecated declaration LCDoops - give arg types
+  int LCDoops();
+src\peripheral.h(23): warning:  #1295-D: Deprecated declaration POTinit - give arg types
+  int POTinit();
+src\peripheral.h(26): warning:  #1295-D: Deprecated declaration POTvalue - give arg types
+  int POTvalue();
+src\peripheral.h(32): warning:  #1295-D: Deprecated declaration lightInit - give arg types
+  void lightInit();
+src\peripheral.h(34): warning:  #1-D: last line of file ends without a newline
+  #endif
+src\peripheral.c: 7 warnings, 0 errors
+compiling rtx_delay.c...
+compiling rtx_evflags.c...
+compiling rtx_evr.c...
+compiling rtx_lib.c...
+compiling rtx_kernel.c...
+compiling rtx_memory.c...
+compiling rtx_mempool.c...
+compiling rtx_msgqueue.c...
+compiling rtx_mutex.c...
+compiling rtx_semaphore.c...
+compiling rtx_system.c...
+compiling rtx_timer.c...
+compiling os_systick.c...
+compiling rtx_thread.c...
+assembling startup_LPC17xx.s...
+compiling RTX_Config.c...
+compiling system_LPC17xx.c...
 linking...
-.\Objects\newFake.axf: Error: L6218E: Undefined symbol time (referred from main.o).
-Not enough information to list image symbols.
-Not enough information to list load addresses in the image map.
-Finished: 2 information, 0 warning and 1 error messages.
-".\Objects\newFake.axf" - 1 Error(s), 18 Warning(s).
+Program Size: Code=15360 RO-data=6724 RW-data=5212 ZI-data=11396  
+".\Objects\newFake.axf" - 0 Error(s), 24 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -100,46 +134,45 @@ Package Vendor: Keil
 <h2>Collection of Component Files used:</h2>
 
    * Component: Keil::Device:Startup:1.0.0
-      Source file:   Device\Source\ARM\startup_LPC17xx.s
       Include file:  Device\Include\LPC17xx.h
-      Source file:   Device\Source\system_LPC17xx.c
+      Source file:   Device\Source\ARM\startup_LPC17xx.s
       Include file:  RTE_Driver\Config\RTE_Device.h
+      Source file:   Device\Source\system_LPC17xx.c
 
    * Component: ARM::CMSIS:RTOS2:Keil RTX5:Source:5.3.0
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_evr.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_lib.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_memory.c
-      Source file:   CMSIS\RTOS2\RTX\Source\ARM\irq_cm3.s
-      Include file:  CMSIS\RTOS2\RTX\Config\RTX_Config.h
-      Source file:   CMSIS\RTOS2\RTX\Template\MsgQueue.c
-      Source file:   CMSIS\RTOS2\RTX\Template\Thread.c
-      Source file:   CMSIS\RTOS2\RTX\Template\svc_user.c
-      Source file:   CMSIS\RTOS2\RTX\Template\main.c
-      Source file:   CMSIS\RTOS2\RTX\Config\RTX_Config.c
-      Source file:   CMSIS\RTOS2\RTX\Template\Mutex.c
       Source file:   CMSIS\RTOS2\RTX\Template\Semaphore.c
-      Include file:  CMSIS\RTOS2\RTX\Include\rtx_os.h
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_kernel.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_thread.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_timer.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_mutex.c
-      Source file:   CMSIS\RTOS2\RTX\Template\MemPool.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_delay.c
-      Source file:   CMSIS\RTOS2\RTX\Template\Timer.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_semaphore.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_mempool.c
       Source file:   CMSIS\RTOS2\RTX\Source\rtx_evflags.c
-      Source file:   CMSIS\RTOS2\RTX\Template\Events.c
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_mempool.c
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_delay.c
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_timer.c
       Source file:   CMSIS\RTOS2\RTX\Source\rtx_msgqueue.c
       Source file:   CMSIS\RTOS2\RTX\Source\rtx_system.c
+      Include file:  CMSIS\RTOS2\RTX\Include\rtx_os.h
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_mutex.c
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_thread.c
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_semaphore.c
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_lib.c
+      Source file:   CMSIS\RTOS2\RTX\Source\ARM\irq_cm3.s
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_evr.c
+      Include file:  CMSIS\RTOS2\RTX\Config\RTX_Config.h
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_memory.c
+      Source file:   CMSIS\RTOS2\RTX\Template\Events.c
+      Source file:   CMSIS\RTOS2\RTX\Template\MsgQueue.c
+      Source file:   CMSIS\RTOS2\RTX\Template\main.c
+      Source file:   CMSIS\RTOS2\RTX\Template\Mutex.c
+      Source file:   CMSIS\RTOS2\RTX\Template\Thread.c
+      Source file:   CMSIS\RTOS2\RTX\Template\Timer.c
+      Source file:   CMSIS\RTOS2\RTX\Config\RTX_Config.c
+      Source file:   CMSIS\RTOS2\RTX\Template\MemPool.c
+      Source file:   CMSIS\RTOS2\RTX\Template\svc_user.c
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_kernel.c
       Source file:   CMSIS\RTOS2\Source\os_systick.c
 
    * Component: ARM::CMSIS:CORE:5.1.1
 
    * Component: ::CMSIS:RTOS2:2.1.2 (API)
       Include file:  CMSIS\RTOS2\Include\cmsis_os2.h
-Target not created.
-Build Time Elapsed:  00:00:01
+Build Time Elapsed:  00:00:03
 </pre>
 </body>
 </html>

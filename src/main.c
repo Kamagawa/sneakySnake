@@ -22,6 +22,7 @@ int init(){
 	position[22][11]='Y';
 	position[21][10]='Y';
 	position[23][10]='Y';
+	lights(nSize);
 	f_r=22; 
 	f_c=10; 
 	speed = 10;
@@ -31,32 +32,31 @@ int init(){
 }
 
 int gibRando(int lower, int upper) { 
-		srand(time(0));
+		// srand(time(0));
     return (rand() % (upper - lower + 1)) + lower; 
 }
 
 int main () { 
-	// osKernelInitialize();                 // Initialize CMSIS-RTOS
+	osKernelInitialize();                 // Initialize CMSIS-RTOS
 	// init kernel, and then init queues
-	// test cases here:
 	printf("cute \n");
-	
-	
 	LCDinit();	
 	POTinit();
+	lightInit();
+	init();
 	
 	
-	game();
 	
 	// init os Kernel 
 	
-	/*
-	osThreadNew(client, (void*)clientargs, NULL);    // Create application main thread
-  osThreadNew(monitor, NULL, NULL);    // Create application main thread
-	osThreadNew(serverA, (void*)&q1, NULL);    // Create application main thread
-	osThreadNew(serverB, (void*)&q2, NULL);    // Create application main thread
-  osKernelStart();                      // Start thread execution
+	
+	osThreadNew(game, NULL, NULL);    
+	osThreadNew(JOYvalue, NULL, NULL);
+/*	
+	osThreadNew(monitor, NULL, NULL); 
+	osThreadNew(serverB, (void*)&q2, NULL);   
 	*/
+  osKernelStart();                      
   for (;;) {}
 	return 0;
 }
@@ -109,7 +109,6 @@ bool validFood(int a, int b){
 
 int processfood(int a, int b, bool action){
 	char m = (action)? 'Y': 1;
-	printf("\n %d %d\n", m, size);
 	if(size==1) {
 		position[a][b] = m;
 	} else if(size==2){
@@ -128,10 +127,12 @@ int processfood(int a, int b, bool action){
 int generateFood(){ 
 	// getNext Size and compute next next size. 
 	size = nSize; 
+	printf("new light size %d \n", size);
 	nSize = gibRando(1, 5);
+	// lights(nSize); // set light
 	if (nSize == 3) nSize=1;
-	printf("\n foodsize: %d %d\n", size, nSize);
-	
+	printf("foodsize: %d %d\n", size, nSize);
+	lights(nSize);
 	// do shit to the LED
 	
 	
@@ -146,19 +147,16 @@ int generateFood(){
 	return 0;
 }
 
-int game(){ 
-	init();
+void game(){ 
 	
 	while(true) { 
 		// A. move
-		
-		
 		int prev_h_r = h_r, prev_h_c = h_c; // 1. get new head
 		moveHead(1);		// 2. move head
 		char suppose = position[h_r][h_c];
 		if(h_r>=0 && h_r<48 && h_c >=0 && h_c<64)
 		position[h_r][h_c] = 'P';
-		printf("%c \n", suppose);
+		// printf("%c \n", suppose);
 		snakeTraverser();		// 3. move tail
 		
 		// B. eat
@@ -166,19 +164,19 @@ int game(){
 		
 		if(suppose == 'X'){
 			
-			printf("EATEN");
+			printf("EATEN\n");
 			moveHead(size);
-			printf("finishMOve");
+			printf("finishMove\n");
 			//1. clear first
 			processfood(f_r, f_c, false);
 			// maybe refresh UI?
 			// LCDdraw();
-			printf("processedFood");
+			printf("processedFood\n");
 			int a = MIN(h_r, prev_h_r),b = MAX(h_r, prev_h_r);
 			for (int i =a; i <b; i++){
 				if(i<EDGE_R && i>=0)position[i][h_c] = 'P';
 			}		
-			printf("realmoveR");
+			printf("realmoveR\n");
 			a = MIN(h_c, prev_h_c),b = MAX(h_c, prev_h_c);
 			for (int i =a; i <b; i++){
 				if(i<EDGE_C && i>=0) position[h_r][i] = 'P';
@@ -188,7 +186,7 @@ int game(){
 			//refresh? screen
 			LCDdraw();
 			generateFood();
-			printf("generatefood");
+			printf("generatefood\n");
 				//1. add length of coresponding block
 				//2. set all food to blank
 				//3. set corresponding snake to block
@@ -202,15 +200,13 @@ int game(){
 		
 		LCDdraw();
 		
-		osDelay(osKernelGetSysTimerFreq()*100);
-		int man = 1000000;
+		osDelay(osKernelGetTickFreq()/10);
+		int man = 1;
 		while(man>0){
 			if(loose) man = 100;
 			man--;
 		}
 	}	
-	// check error
-	return 0;
 }
 
 int LCDdraw() { 
@@ -231,4 +227,25 @@ int LCDdraw() {
 			
 	}
 	return 0;	
+}
+
+// JoyStick 
+void JOYvalue(){ 
+	printf("INTO\n");
+	long val = LPC_GPIO1->FIOPIN;
+	while (true){
+		val = LPC_GPIO1->FIOPIN;
+		for (int i =1; i <=4; i++) {
+			if(!(val&1<<(22+i))) {
+				// direction = i;
+				// printf("d: %d, i: %d\n", direction, i);
+				if (i==direction || i+2==direction || i-2==direction){
+						// printf("REAP\n");
+				} else {
+					printf("YOLO %d \n", i);
+						direction = i;
+				}
+			}
+		}
+	}
 }

@@ -59,13 +59,23 @@ int POTvalue(){
 }
 
 
-// JoyStick 
-int JOYvalue(){ 
-	long val = LPC_GPIO1->FIOPIN;
-	
-	for (int i =1; i <=4; i++) {
-			if(!(val&1<<(22+i))) return i;
-	}
-	return 0;
+
+
+void lightInit(){
+	LPC_GPIO1->FIODIR |= 0xB0000000;
+		LPC_GPIO2->FIODIR |= 0x0000007C;
 }
 
+void lights (int number){ 
+		LPC_GPIO2->FIOCLR |= 0x0000007C;
+	
+		switch(number) {
+			case 0: LPC_GPIO2->FIOSET |= 0x00000000; break;
+			case 1: LPC_GPIO2->FIOSET |= 0x00000040; break;
+			case 2: LPC_GPIO2->FIOSET |= 0x00000060; break;
+			case 3: LPC_GPIO2->FIOSET |= 0x00000070; break;
+			case 4: LPC_GPIO2->FIOSET |= 0x00000078; break;
+			case 5: LPC_GPIO2->FIOSET |= 0x0000007C; break;
+		}
+		
+}

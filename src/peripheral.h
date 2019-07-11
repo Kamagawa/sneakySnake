@@ -27,7 +27,8 @@ int POTvalue();
 
 
 // JoyStick 
-int JOYvalue();
 
+void lights (int number);
+void lightInit();
 
 #endif
