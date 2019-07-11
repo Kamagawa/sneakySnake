@@ -5,6 +5,7 @@
 ".\objects\retarget.o"
 ".\objects\uart.o"
 ".\objects\main.o"
+".\objects\peripheral.o"
 ".\objects\irq_cm3.o"
 ".\objects\rtx_delay.o"
 ".\objects\rtx_evflags.o"
