@@ -1,9 +1,9 @@
 #ifndef PER
 #define PER
 
+#include "data.h"
 #include <lpc17xx.h>
 #include "uart.h"
-#include "random.h"
 #include "GLCD.h"
 
 
@@ -13,7 +13,7 @@ int LCDinit();
 // set color for body or food or other shits 
 int codeToColor(int xd);
 
-void tool(int i, int j, int color);
+void tool(int, int, int);
 int LCDdraw();
 
 int LCDoops();
@@ -21,13 +21,12 @@ int LCDoops();
 
 // POT
 int POTinit();
-
-
+void setPOT (void *);
 
 
 // JoyStick 
-
-void lights (int number);
+void JOYvalue(void *);
+void lights (int);
 void lightInit();
 
 #endif

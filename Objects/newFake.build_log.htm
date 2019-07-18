@@ -27,23 +27,9 @@ Project File Date:  07/11/2019
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 5 (build 528)', folder: 'C:\Software\Keil_v5\ARM\ARMCC\Bin'
 Build target 'Target 1'
-compiling main.c...
-src\main.h(15): warning:  #1295-D: Deprecated declaration LCDinit - give arg types
-  int LCDinit();
-src\main.h(16): warning:  #1295-D: Deprecated declaration LCDdraw - give arg types
-  int LCDdraw();
-src\main.h(17): warning:  #1295-D: Deprecated declaration LCDoops - give arg types
-  int LCDoops();
-src\main.h(20): warning:  #1295-D: Deprecated declaration LCDborder - give arg types
-  int LCDborder();
-src\main.h(24): warning:  #1295-D: Deprecated declaration POTinit - give arg types
-  int POTinit();
-src\main.h(25): warning:  #1295-D: Deprecated declaration POTvalue - give arg types
-  int POTvalue();
-src\main.h(26): warning:  #1295-D: Deprecated declaration game - give arg types
-  void game();
-src\main.h(29): warning:  #1295-D: Deprecated declaration JOYvalue - give arg types
-  void JOYvalue();
+compiling peripheral.c...
+src\data.h(21): warning:  #1-D: last line of file ends without a newline
+  #endif
 src\peripheral.h(11): warning:  #1295-D: Deprecated declaration LCDinit - give arg types
   int LCDinit();
 src\peripheral.h(17): warning:  #1295-D: Deprecated declaration LCDdraw - give arg types
@@ -52,22 +38,50 @@ src\peripheral.h(19): warning:  #1295-D: Deprecated declaration LCDoops - give a
   int LCDoops();
 src\peripheral.h(23): warning:  #1295-D: Deprecated declaration POTinit - give arg types
   int POTinit();
-src\peripheral.h(31): warning:  #1295-D: Deprecated declaration lightInit - give arg types
+src\peripheral.h(30): warning:  #1295-D: Deprecated declaration lightInit - give arg types
   void lightInit();
-src\peripheral.h(33): warning:  #1-D: last line of file ends without a newline
+src\peripheral.h(32): warning:  #1-D: last line of file ends without a newline
   #endif
-src\main.c(78): warning:  #167-D: argument of type "void (*)()" is incompatible with parameter of type "osThreadFunc_t"
-  	osThreadNew(setPOT, 
-ULL, 
-ULL); 
-src\main.c(81): warning:  #111-D: statement is unreachable
-  	return 0;
-src\main.c(277): warning:  #1-D: last line of file ends without a newline
+src\peripheral.c(62): warning:  #223-D: function "printf" declared implicitly
+  				printf("speedChange: %d \n", s);
+src\peripheral.c(109): warning:  #1-D: last line of file ends without a newline
   }
-src\main.c: 17 warnings, 0 errors
+src\peripheral.c: 9 warnings, 0 errors
+compiling main.c...
+src\main.h(14): warning:  #1295-D: Deprecated declaration LCDinit - give arg types
+  int LCDinit();
+src\main.h(15): warning:  #1295-D: Deprecated declaration LCDdraw - give arg types
+  int LCDdraw();
+src\main.h(16): warning:  #1295-D: Deprecated declaration LCDoops - give arg types
+  int LCDoops();
+src\main.h(17): warning:  #1295-D: Deprecated declaration LCDborder - give arg types
+  int LCDborder();
+src\main.h(20): warning:  #1295-D: Deprecated declaration POTinit - give arg types
+  int POTinit();
+src\main.h(21): warning:  #1295-D: Deprecated declaration POTvalue - give arg types
+  int POTvalue();
+src\main.h(22): warning:  #1295-D: Deprecated declaration game - give arg types
+  void game();
+src\data.h(21): warning:  #1-D: last line of file ends without a newline
+  #endif
+src\peripheral.h(11): warning:  #1295-D: Deprecated declaration LCDinit - give arg types
+  int LCDinit();
+src\peripheral.h(17): warning:  #1295-D: Deprecated declaration LCDdraw - give arg types
+  int LCDdraw();
+src\peripheral.h(19): warning:  #1295-D: Deprecated declaration LCDoops - give arg types
+  int LCDoops();
+src\peripheral.h(23): warning:  #1295-D: Deprecated declaration POTinit - give arg types
+  int POTinit();
+src\peripheral.h(30): warning:  #1295-D: Deprecated declaration lightInit - give arg types
+  void lightInit();
+src\peripheral.h(32): warning:  #1-D: last line of file ends without a newline
+  #endif
+src\main.c(54): warning:  #111-D: statement is unreachable
+  	return 0;
+src\main.c: 15 warnings, 0 errors
 linking...
-Program Size: Code=15756 RO-data=6724 RW-data=5208 ZI-data=11392  
-".\Objects\newFake.axf" - 0 Error(s), 17 Warning(s).
+Program Size: Code=15752 RO-data=6732 RW-data=5212 ZI-data=11396  
+".\Objects\newFake.axf" - 0 Error(s), 24 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -97,45 +111,45 @@ Package Vendor: Keil
 <h2>Collection of Component Files used:</h2>
 
    * Component: Keil::Device:Startup:1.0.0
-      Include file:  Device\Include\LPC17xx.h
       Source file:   Device\Source\ARM\startup_LPC17xx.s
+      Include file:  Device\Include\LPC17xx.h
       Include file:  RTE_Driver\Config\RTE_Device.h
       Source file:   Device\Source\system_LPC17xx.c
 
    * Component: ARM::CMSIS:RTOS2:Keil RTX5:Source:5.3.0
-      Source file:   CMSIS\RTOS2\RTX\Template\Semaphore.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_timer.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_memory.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_system.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_evr.c
-      Include file:  CMSIS\RTOS2\RTX\Config\RTX_Config.h
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_delay.c
-      Source file:   CMSIS\RTOS2\RTX\Template\main.c
-      Source file:   CMSIS\RTOS2\RTX\Template\Thread.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_lib.c
-      Source file:   CMSIS\RTOS2\RTX\Source\ARM\irq_cm3.s
-      Source file:   CMSIS\RTOS2\RTX\Template\MemPool.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_kernel.c
       Source file:   CMSIS\RTOS2\RTX\Config\RTX_Config.c
-      Source file:   CMSIS\RTOS2\RTX\Template\Timer.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_msgqueue.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_mempool.c
-      Source file:   CMSIS\RTOS2\RTX\Template\Events.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_thread.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_mutex.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_evflags.c
-      Source file:   CMSIS\RTOS2\RTX\Source\rtx_semaphore.c
-      Source file:   CMSIS\RTOS2\RTX\Template\MsgQueue.c
-      Source file:   CMSIS\RTOS2\RTX\Template\Mutex.c
       Source file:   CMSIS\RTOS2\RTX\Template\svc_user.c
       Include file:  CMSIS\RTOS2\RTX\Include\rtx_os.h
+      Source file:   CMSIS\RTOS2\RTX\Template\Timer.c
+      Source file:   CMSIS\RTOS2\RTX\Template\Events.c
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_thread.c
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_timer.c
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_evflags.c
+      Source file:   CMSIS\RTOS2\RTX\Template\Thread.c
+      Source file:   CMSIS\RTOS2\RTX\Template\MemPool.c
+      Source file:   CMSIS\RTOS2\RTX\Template\MsgQueue.c
+      Source file:   CMSIS\RTOS2\RTX\Template\Mutex.c
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_kernel.c
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_msgqueue.c
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_semaphore.c
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_system.c
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_lib.c
+      Source file:   CMSIS\RTOS2\RTX\Source\ARM\irq_cm3.s
+      Include file:  CMSIS\RTOS2\RTX\Config\RTX_Config.h
+      Source file:   CMSIS\RTOS2\RTX\Template\Semaphore.c
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_memory.c
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_evr.c
+      Source file:   CMSIS\RTOS2\RTX\Template\main.c
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_delay.c
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_mutex.c
+      Source file:   CMSIS\RTOS2\RTX\Source\rtx_mempool.c
       Source file:   CMSIS\RTOS2\Source\os_systick.c
 
    * Component: ARM::CMSIS:CORE:5.1.1
 
    * Component: ::CMSIS:RTOS2:2.1.2 (API)
       Include file:  CMSIS\RTOS2\Include\cmsis_os2.h
-Build Time Elapsed:  00:00:02
+Build Time Elapsed:  00:00:01
 </pre>
 </body>
 </html>

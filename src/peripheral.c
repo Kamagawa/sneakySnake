@@ -51,14 +51,19 @@ int POTinit() {
 	return 0;
 }
 
-// current range 2 - 4092, maybe 10 levels of speed? should there be 0 speed?
-int POTvalue(){ 
-	  LPC_ADC->ADCR |= (0x01<<24);
-		while(! (LPC_ADC-> ADGDR & 0x80000000));
-		return (LPC_ADC-> ADGDR & 0xfff0) >> 4;
+// setPOT(thread)
+void setPOT(void *arg){ 
+		int *speed = (int *)arg; // get integer refrence
+		int s = 0;
+		while (1){
+			LPC_ADC->ADCR |= (0x01<<24);
+			if ((LPC_ADC-> ADGDR & 0x80000000)){
+				s = 1+((LPC_ADC-> ADGDR & 0xfff0) >> 10);
+				printf("speedChange: %d \n", s);
+				*speed = s;
+			}
+		}
 }
-
-
 
 
 void lightInit(){
@@ -78,4 +83,27 @@ void lights (int number){
 			case 5: LPC_GPIO2->FIOSET |= 0x0000007C; break;
 		}
 		
+}
+
+// JoyStick 
+void JOYvalue(void * tp){ 
+	Tupleptr *t = (Tupleptr*) tp;
+	// printf("INTO\n");
+	long val = LPC_GPIO1->FIOPIN;
+	while (1){
+		*(t->y)+=1;
+		val = LPC_GPIO1->FIOPIN;
+		for (int i =1; i <=4; i++) {
+			if(!(val&1<<(22+i))) {
+				// direction = i;
+				// printf("d: %d, i: %d\n", direction, i);
+				if (i==*(t->x) || i+2==*(t->x) || i-2==*(t->x)){
+						// printf("REAP\n");
+				} else {
+					// printf("YOLO %d \n", i);
+						(*(t->x)) = i;
+				}
+			}
+		}
+	}
 }

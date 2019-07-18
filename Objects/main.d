@@ -17,4 +17,5 @@
 .\objects\main.o: src\random.h
 .\objects\main.o: src\lfsr113.h
 .\objects\main.o: src\GLCD.h
+.\objects\main.o: src\data.h
 .\objects\main.o: src\peripheral.h

@@ -1,29 +1,29 @@
 #include "main.h"
+#include "data.h"
 #include "peripheral.h"
 
 // global variables declarations
 // dimension: 320 * 240, 1 blocks per 5 pixels : 64 * 48
-// within the position:
+// within the pos:
 // 0 - empty
 // 1 - body 
 // 10 - food
 
 // food size: 1,2,4,5 no more 
-unsigned char position[EDGE_R][EDGE_C] = {0}; 
+unsigned char pos[EDGE_R][EDGE_C] = {0}; 
 int speed = 0, direction = 4, size = 4, nSize=1;
 int h_r = 22, h_c = 32, t_r = 22, t_c = 33, f_r=22, f_c=10; 
-uint16_t gas= 0;
-
+int gas= 0;
 bool loose = false;
 
 int init(){ 
 	loose = false;
-	position[22][32]='P';
-	position[22][33]='P';
-	position[22][9]='Y';
-	position[22][11]='Y';
-	position[21][10]='Y';
-	position[23][10]='Y';
+	pos[22][32]='P';
+	pos[22][33]='P';
+	pos[22][9]='Y';
+	pos[22][11]='Y';
+	pos[21][10]='Y';
+	pos[23][10]='Y';
 	lights(nSize);
 	f_r=22; 
 	f_c=10; 
@@ -38,62 +38,31 @@ void rip(){
 			LCDoops();
 }
 
-int gibRando(int lower, int upper) { // inclusive, exlcusive
-		int ran =  gas%(upper-lower)+lower;
-		printf("rand: %d \n", ran);
-		return ran;
-}
-
-void setPOT(){ 
-		int s = 0;
-	  
-		while (1){
-			LPC_ADC->ADCR |= (0x01<<24);
-			if ((LPC_ADC-> ADGDR & 0x80000000)){
-				s = 1+((LPC_ADC-> ADGDR & 0xfff0) >> 10);
-				printf("FUCK %d \n", s);
-				speed = s;
-			}
-		}
-}
-
-
 int main () { 
-	
-	osKernelInitialize();                 // Initialize CMSIS-RTOS
-	// init kernel, and then init queues
 	printf("cute \n");
+	osKernelInitialize(); // Initialize CMSIS-RTOS	
 	LCDinit();	
 	POTinit();
 	lightInit();
-	init();
-	
-	
-	
-	// init os Kernel 
-	
-	
+	init(); // init os Kernel 
+	Tupleptr t = {&direction, &gas};
 	osThreadNew(game, NULL, NULL);    
-	osThreadNew(JOYvalue, NULL, NULL);
-	osThreadNew(setPOT, NULL, NULL); 
+	osThreadNew(JOYvalue, &t, NULL);
+	osThreadNew(setPOT, (void*)&speed, NULL); 
   osKernelStart();                      
   for (;;) {}
 	return 0;
 }
 
-
-
-
 int snakeTraverser() {
-	
 	// find in four direction, excluding previous to find tail
 	for(int i=-1; i<=1;i++) { 
 		for(int j=-1;j<=1;j++) { 
 			if ((!i&&!j) || i*i+j*j==2) { 
 				// skip 1. (0,0) 2. corners like (1,1) 3. equals last block
 				continue;
-			} else if (position[t_r+i][t_c+j] == 'O') { 
-				position[t_r][t_c]= 1;
+			} else if (pos[t_r+i][t_c+j] == 'O') { 
+				pos[t_r][t_c]= 1;
 				t_r = t_r+i;
 				t_c = t_c+j;
 			}
@@ -120,29 +89,28 @@ bool validFood(int a, int b){
 	if(a == -1 || b==-1){
 		return false;
 	} else if(size>2){
-			return !position[a][b] && !position[a-1][b] && !position[a+1][b]
-				&& !position[a][b+1] && !position[a][b-1];
+			return !pos[a][b] && !pos[a-1][b] && !pos[a+1][b]
+				&& !pos[a][b+1] && !pos[a][b-1];
 	} else if (size ==2){
-		return !position[a][b+1];
+		return !pos[a][b+1];
 	} 
-	return !position[a][b];
+	return !pos[a][b];
 }
 
 int processfood(int a, int b, bool action){
 	char m = (action)? 'Y': 1;
 	if(size==1) {
-		if(position[a][b]!='P' && position[a][b]!='O')position[a][b] = m;
+		if(pos[a][b]!='P' && pos[a][b]!='O')pos[a][b] = m;
 	} else if(size==2){
-		if(position[a][b]!='P' &&position[a][b]!='O')position[a][b] = m;
-		if(position[a][b+1]!='P'&&position[a][b+1]!='O')position[a][b+1] = m;
+		if(pos[a][b]!='P' &&pos[a][b]!='O')pos[a][b] = m;
+		if(pos[a][b+1]!='P'&&pos[a][b+1]!='O')pos[a][b+1] = m;
 	} else if (size == 4 || size ==5) {
-		if(position[a][b+1]!='P'&&position[a][b+1]!='O')position[a][b+1] = m;
-		if(position[a][b-1]!='P'&&position[a][b-1]!='O')position[a][b-1] = m;
-		if(position[a+1][b]!='P'&&position[a+1][b]!='O')position[a+1][b] = m;
-		if(position[a-1][b]!='P'&&position[a-1][b]!='O')position[a-1][b] = m;
+		if(pos[a][b+1]!='P'&&pos[a][b+1]!='O')pos[a][b+1] = m;
+		if(pos[a][b-1]!='P'&&pos[a][b-1]!='O')pos[a][b-1] = m;
+		if(pos[a+1][b]!='P'&&pos[a+1][b]!='O')pos[a+1][b] = m;
+		if(pos[a-1][b]!='P'&&pos[a-1][b]!='O')pos[a-1][b] = m;
 		if (size==5) {
-			if(position[a][b]!='P'&& position[a][b]!='O')position[a][b] = m;
-	
+			if(pos[a][b]!='P'&& pos[a][b]!='O')pos[a][b] = m;
 		}
 	}		
 	return 0;
@@ -152,7 +120,7 @@ int generateFood(){
 	// getNext Size and compute next next size. 
 	size = nSize; 
 	printf("new light size %d \n", size);
-	nSize = gibRando(1, 5);
+	nSize = gibRando(1, 5, gas);
 	// lights(nSize); // set light
 	if (nSize == 3) nSize=1;
 	printf("foodsize: %d %d\n", size, nSize);
@@ -163,8 +131,8 @@ int generateFood(){
 	
 	int row = -1, col = -1;
 	while (!validFood(row, col)){
-		row = gibRando(1, EDGE_R-1);
-		col = gibRando(1, EDGE_C-1);
+		row = gibRando(1, EDGE_R-1, gas);
+		col = gibRando(1, EDGE_C-1, gas);
 	}
 	f_r = row, f_c=col;
 	processfood(row,col, true);
@@ -174,11 +142,12 @@ int generateFood(){
 void game(){ 
 	
 	while(true) { 
+		
 		// A. move
 		int prev_h_r = h_r, prev_h_c = h_c; // 1. get new head
 		moveHead(1);		// 2. move head
-		char suppose = position[h_r][h_c];
-		if(h_r>=0 && h_r<EDGE_R && h_c >=0 && h_c<EDGE_C && position[h_r][h_c] != 'O') position[h_r][h_c] = 'P';
+		char suppose = pos[h_r][h_c];
+		if(h_r>=0 && h_r<EDGE_R && h_c >=0 && h_c<EDGE_C && pos[h_r][h_c] != 'O') pos[h_r][h_c] = 'P';
 		else rip();
 		// printf("%c \n", suppose);
 		snakeTraverser();		// 3. move tail
@@ -199,25 +168,21 @@ void game(){
 			int a = MIN(h_r, prev_h_r),b = MAX(h_r, prev_h_r);
 			for (int i =a; i <b; i++){
 				if (i==prev_h_r){}
-				else if(i<EDGE_R && i>=0 && position[i][h_c]!='O')position[i][h_c] = 'P';
+				else if(i<EDGE_R && i>=0 && pos[i][h_c]!='O')pos[i][h_c] = 'P';
 				else rip();
 			}		
 			printf("realmoveR\n");
 			a = MIN(h_c, prev_h_c),b = MAX(h_c, prev_h_c);
 			for (int i =a; i <b; i++){
 				if (i==prev_h_c){}
-				else if(i<EDGE_C && i>=0 &&  position[h_r][i]!='O') position[h_r][i] = 'P';
+				else if(i<EDGE_C && i>=0 &&  pos[h_r][i]!='O') pos[h_r][i] = 'P';
 				else rip();
 			}
 			
 			printf("realmoveL\n");
-			//refresh? screen
 			LCDdraw();
 			generateFood();
 			printf("generatefood\n");
-				//1. add length of coresponding block
-				//2. set all food to blank
-				//3. set corresponding snake to block
 		}
 		
 		
@@ -227,7 +192,6 @@ void game(){
 		osDelay(osKernelGetTickFreq()/speed);
 		int man = 1;
 		while(man>0){
-			
 			if(loose) man = 100;
 			man--;
 		}
@@ -238,14 +202,14 @@ int LCDdraw() {
 	// iterate matrix
 	for (int i=0; i <EDGE_R; i++) { 
 		for (int j=0; j<EDGE_C; j++) {
-			if (position[i][j]==1){
-				position[i][j] = 0;
+			if (pos[i][j]==1){
+				pos[i][j] = 0;
 				tool(i,j, White);
-			} else if (position[i][j]=='P'){
-				position[i][j] = 'O';
+			} else if (pos[i][j]=='P'){
+				pos[i][j] = 'O';
 				tool(i,j, Blue);
-			} else if (position[i][j]=='Y'){
-				position[i][j] = 'X';
+			} else if (pos[i][j]=='Y'){
+				pos[i][j] = 'X';
 				tool(i,j, Red);
 			}
 		}	
@@ -254,24 +218,3 @@ int LCDdraw() {
 	return 0;	
 }
 
-// JoyStick 
-void JOYvalue(){ 
-	// printf("INTO\n");
-	long val = LPC_GPIO1->FIOPIN;
-	while (true){
-		gas++;
-		val = LPC_GPIO1->FIOPIN;
-		for (int i =1; i <=4; i++) {
-			if(!(val&1<<(22+i))) {
-				// direction = i;
-				// printf("d: %d, i: %d\n", direction, i);
-				if (i==direction || i+2==direction || i-2==direction){
-						// printf("REAP\n");
-				} else {
-					// printf("YOLO %d \n", i);
-						direction = i;
-				}
-			}
-		}
-	}
-}
