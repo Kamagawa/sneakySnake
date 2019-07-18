@@ -7,6 +7,7 @@
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 #define gibRando(lower, upper, seed) ((seed) % ((upper)-(lower))+(lower))
+#define within(x,y) (((x)>=(0)) && ((x)<(EDGE_R)) && ((y)>=(0)) && ((y)<(EDGE_C)))
 
 typedef struct {
 	int x;

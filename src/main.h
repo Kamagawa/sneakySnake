@@ -20,7 +20,8 @@ int score(int score);
 int POTinit();
 int POTvalue();
 void game();
-
+void decer(int,int);
+void pushDetector();
 
 #endif
 

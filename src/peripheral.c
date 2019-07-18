@@ -59,7 +59,7 @@ void setPOT(void *arg){
 			LPC_ADC->ADCR |= (0x01<<24);
 			if ((LPC_ADC-> ADGDR & 0x80000000)){
 				s = 1+((LPC_ADC-> ADGDR & 0xfff0) >> 10);
-				printf("speedChange: %d \n", s);
+				//printf("speedChange: %d \n", s);
 				*speed = s;
 			}
 		}

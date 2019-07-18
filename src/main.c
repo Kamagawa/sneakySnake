@@ -11,15 +11,23 @@
 
 // food size: 1,2,4,5 no more 
 unsigned char pos[EDGE_R][EDGE_C] = {0}; 
+unsigned int marker[EDGE_R][EDGE_C] = {0}; 
 int speed = 0, direction = 4, size = 4, nSize=1;
 int h_r = 22, h_c = 32, t_r = 22, t_c = 33, f_r=22, f_c=10; 
-int gas= 0;
+int gas= 0, snakeSize = 3;
 bool loose = false;
 
 int init(){ 
 	loose = false;
+	//body
 	pos[22][32]='P';
 	pos[22][33]='P';
+	
+	//body marker
+	marker[22][32]=2;
+	marker[22][33]=1;
+	
+	//food
 	pos[22][9]='Y';
 	pos[22][11]='Y';
 	pos[21][10]='Y';
@@ -30,6 +38,7 @@ int init(){
 	speed = 0;
   direction = 4;
   h_r = 22, h_c = 32; 
+	t_r = 22, t_c = 33;
 	return 0;
 }
 
@@ -37,6 +46,19 @@ void rip(){
 			loose = true;
 			LCDoops();
 }
+
+void display(){
+	for (int i=0; i <EDGE_R; i++) { 
+		for (int j=0; j<EDGE_C; j++) {
+			printf("%d ", marker[i][j]);
+		}
+		printf("|| \n");
+	}
+	
+	printf("______\n");
+	printf("\n");
+}
+
 
 int main () { 
 	printf("cute \n");
@@ -48,39 +70,48 @@ int main () {
 	Tupleptr t = {&direction, &gas};
 	osThreadNew(game, NULL, NULL);    
 	osThreadNew(JOYvalue, &t, NULL);
-	osThreadNew(setPOT, (void*)&speed, NULL); 
+	osThreadNew(setPOT, (void*)&speed, NULL);
+	osThreadNew(pushDetector, NULL, NULL);
   osKernelStart();                      
   for (;;) {}
 	return 0;
 }
 
+
+
 int snakeTraverser() {
-	// find in four direction, excluding previous to find tail
-	for(int i=-1; i<=1;i++) { 
-		for(int j=-1;j<=1;j++) { 
-			if ((!i&&!j) || i*i+j*j==2) { 
-				// skip 1. (0,0) 2. corners like (1,1) 3. equals last block
-				continue;
-			} else if (pos[t_r+i][t_c+j] == 'O') { 
-				pos[t_r][t_c]= 1;
-				t_r = t_r+i;
-				t_c = t_c+j;
-			}
+	// assume the last place is  1
+	pos[t_r][t_c]= 1;
+	marker[t_r][t_c]= 0;
+	if(within(t_r, t_c+1)&&marker[t_r][t_c+1]==2) {
+		t_c+=1;
+	} else if (within(t_r,t_c-1)&&marker[t_r][t_c-1]==2) {
+		t_c-=1;
+	} else if (within(t_r+1,t_c)&&marker[t_r+1][t_c]==2) {
+		t_r+=1;
+	} else if (within(t_r-1,t_c)&&marker[t_r-1][t_c]==2) {
+		t_r-=1;
+	}
+	snakeSize--;
+	for (int i=0; i <EDGE_R; i++) { 
+		for (int j=0; j<EDGE_C; j++) {
+			if(marker[i][j]>0) marker[i][j]--;
 		}
 	}
 	return 0;
 }
 
-int moveHead(int unit){ 
-	
+Tuple director(){
+	Tuple p = {0,0};
 	switch(direction){ 
-			case 4: h_c-=unit; break;
-			case 2: h_c+=unit; break;
-			case 1: h_r-=unit; break;
-			case 3: h_r+=unit; break;
+			case 4: p.y=-1; break;
+			case 2: p.y=1; break;
+			case 1: p.x=-1; break;
+			case 3: p.x=1; break;
 		}
-	return unit;
+	return p;
 }
+
 
 // imagine the food as 3*3 blocks
 // dangerous but do random
@@ -121,15 +152,11 @@ int generateFood(){
 	size = nSize; 
 	printf("new light size %d \n", size);
 	nSize = gibRando(1, 5, gas);
-	// lights(nSize); // set light
 	if (nSize == 3) nSize=1;
 	printf("foodsize: %d %d\n", size, nSize);
-	lights(nSize);
-	// do shit to the LED
+	lights(nSize); // light up LED to show new size
 	
-	
-	
-	int row = -1, col = -1;
+	int row = -1, col = -1; // put food on the table
 	while (!validFood(row, col)){
 		row = gibRando(1, EDGE_R-1, gas);
 		col = gibRando(1, EDGE_C-1, gas);
@@ -139,15 +166,30 @@ int generateFood(){
 	return 0;
 }
 
-void game(){ 
-	
+void pushDetector(){ 
+	bool prevState, curState;
+	prevState = false;
 	while(true) { 
-		
-		// A. move
+		curState = !(LPC_GPIO2->FIOPIN & (1 << 10));
+		if(curState && !prevState){
+			printf("PUSHED YUGE BUTTON");
+			processfood(f_r,f_c, false);
+			generateFood();
+		}
+		prevState = curState;
+	}
+}
+
+
+void game(){ 
+	while(true) { 
+		//display();
 		int prev_h_r = h_r, prev_h_c = h_c; // 1. get new head
-		moveHead(1);		// 2. move head
+		Tuple t = director();
+		h_r+=t.x; h_c+=t.y;
+		marker[h_r][h_c] = snakeSize++;
 		char suppose = pos[h_r][h_c];
-		if(h_r>=0 && h_r<EDGE_R && h_c >=0 && h_c<EDGE_C && pos[h_r][h_c] != 'O') pos[h_r][h_c] = 'P';
+		if(within(h_r,h_c)&& pos[h_r][h_c] != 'O') pos[h_r][h_c] = 'P';
 		else rip();
 		// printf("%c \n", suppose);
 		snakeTraverser();		// 3. move tail
@@ -156,38 +198,29 @@ void game(){
 		// check if food is eaten, if eaten update size and food
 		
 		if(suppose == 'X'){
-			
 			printf("EATEN\n");
-			moveHead(size);
-			printf("finishMove\n");
-			//1. clear first
-			processfood(f_r, f_c, false);
-			// maybe refresh UI?
-			// LCDdraw();
+			processfood(f_r, f_c, false); //1. clear first
 			printf("processedFood\n");
 			int a = MIN(h_r, prev_h_r),b = MAX(h_r, prev_h_r);
-			for (int i =a; i <b; i++){
-				if (i==prev_h_r){}
-				else if(i<EDGE_R && i>=0 && pos[i][h_c]!='O')pos[i][h_c] = 'P';
+			for (int i =0; i <size; i++){
+				h_r+=t.x; h_c+=t.y;
+				
+				if(within(h_r,h_c) && pos[h_r][h_c]!='O') {
+					marker[h_r][h_c] = snakeSize++;
+					pos[h_r][h_c] = 'P';
+				}
 				else rip();
 			}		
 			printf("realmoveR\n");
-			a = MIN(h_c, prev_h_c),b = MAX(h_c, prev_h_c);
-			for (int i =a; i <b; i++){
-				if (i==prev_h_c){}
-				else if(i<EDGE_C && i>=0 &&  pos[h_r][i]!='O') pos[h_r][i] = 'P';
-				else rip();
-			}
-			
-			printf("realmoveL\n");
 			LCDdraw();
 			generateFood();
 			printf("generatefood\n");
 		}
 		
 		
-		if(h_r<0 || h_c<0 || h_r>=EDGE_R || h_c >=EDGE_C)rip(); // still need? 
+		if(!within(h_r,h_c))rip(); // lose after all is done but out
 		LCDdraw();
+		
 		printf("Speed %d\n", (osKernelGetTickFreq()/speed));
 		osDelay(osKernelGetTickFreq()/speed);
 		int man = 1;
@@ -213,7 +246,6 @@ int LCDdraw() {
 				tool(i,j, Red);
 			}
 		}	
-			
 	}
 	return 0;	
 }

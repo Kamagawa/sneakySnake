@@ -29,4 +29,6 @@ void JOYvalue(void *);
 void lights (int);
 void lightInit();
 
+// button pressed
+void depressed();
 #endif
