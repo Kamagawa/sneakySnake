@@ -27,8 +27,6 @@ void game();
 
 // Joy stick 
 void JOYvalue();
-
-
 #endif
 
 

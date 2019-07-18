@@ -22,8 +22,7 @@ int LCDoops();
 // POT
 int POTinit();
 
-// current range 2 - 4092, maybe 10 levels of speed? should there be 0 speed?
-int POTvalue();
+
 
 
 // JoyStick 

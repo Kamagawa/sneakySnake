@@ -10,8 +10,10 @@
 
 // food size: 1,2,4,5 no more 
 unsigned char position[EDGE_R][EDGE_C] = {0}; 
-int speed = 10, direction = 4, size = 4, nSize=1;
+int speed = 0, direction = 4, size = 4, nSize=1;
 int h_r = 22, h_c = 32, t_r = 22, t_c = 33, f_r=22, f_c=10; 
+uint16_t gas= 0;
+
 bool loose = false;
 
 int init(){ 
@@ -25,18 +27,39 @@ int init(){
 	lights(nSize);
 	f_r=22; 
 	f_c=10; 
-	speed = 10;
+	speed = 0;
   direction = 4;
   h_r = 22, h_c = 32; 
 	return 0;
 }
 
-int gibRando(int lower, int upper) { 
-		// srand(time(0));
-    return (rand() % (upper - lower + 1)) + lower; 
+void rip(){
+			loose = true;
+			LCDoops();
 }
 
+int gibRando(int lower, int upper) { // inclusive, exlcusive
+		int ran =  gas%(upper-lower)+lower;
+		printf("rand: %d \n", ran);
+		return ran;
+}
+
+void setPOT(){ 
+		int s = 0;
+	  
+		while (1){
+			LPC_ADC->ADCR |= (0x01<<24);
+			if ((LPC_ADC-> ADGDR & 0x80000000)){
+				s = 1+((LPC_ADC-> ADGDR & 0xfff0) >> 10);
+				printf("FUCK %d \n", s);
+				speed = s;
+			}
+		}
+}
+
+
 int main () { 
+	
 	osKernelInitialize();                 // Initialize CMSIS-RTOS
 	// init kernel, and then init queues
 	printf("cute \n");
@@ -52,10 +75,7 @@ int main () {
 	
 	osThreadNew(game, NULL, NULL);    
 	osThreadNew(JOYvalue, NULL, NULL);
-/*	
-	osThreadNew(monitor, NULL, NULL); 
-	osThreadNew(serverB, (void*)&q2, NULL);   
-	*/
+	osThreadNew(setPOT, NULL, NULL); 
   osKernelStart();                      
   for (;;) {}
 	return 0;
@@ -83,6 +103,7 @@ int snakeTraverser() {
 }
 
 int moveHead(int unit){ 
+	
 	switch(direction){ 
 			case 4: h_c-=unit; break;
 			case 2: h_c+=unit; break;
@@ -110,20 +131,23 @@ bool validFood(int a, int b){
 int processfood(int a, int b, bool action){
 	char m = (action)? 'Y': 1;
 	if(size==1) {
-		position[a][b] = m;
+		if(position[a][b]!='P' && position[a][b]!='O')position[a][b] = m;
 	} else if(size==2){
-		position[a][b] = m;
-		position[a][b+1] = m;
+		if(position[a][b]!='P' &&position[a][b]!='O')position[a][b] = m;
+		if(position[a][b+1]!='P'&&position[a][b+1]!='O')position[a][b+1] = m;
 	} else if (size == 4 || size ==5) {
-		position[a][b+1] = m;
-		position[a][b-1] = m;
-		position[a+1][b] = m;
-		position[a-1][b] = m;
-		if (size==5) position[a][b] = m;
-	} 
+		if(position[a][b+1]!='P'&&position[a][b+1]!='O')position[a][b+1] = m;
+		if(position[a][b-1]!='P'&&position[a][b-1]!='O')position[a][b-1] = m;
+		if(position[a+1][b]!='P'&&position[a+1][b]!='O')position[a+1][b] = m;
+		if(position[a-1][b]!='P'&&position[a-1][b]!='O')position[a-1][b] = m;
+		if (size==5) {
+			if(position[a][b]!='P'&& position[a][b]!='O')position[a][b] = m;
+	
+		}
+	}		
 	return 0;
 }
-	
+
 int generateFood(){ 
 	// getNext Size and compute next next size. 
 	size = nSize; 
@@ -139,8 +163,8 @@ int generateFood(){
 	
 	int row = -1, col = -1;
 	while (!validFood(row, col)){
-		row = gibRando(1, EDGE_R-2);
-		col = gibRando(1, EDGE_C-2);
+		row = gibRando(1, EDGE_R-1);
+		col = gibRando(1, EDGE_C-1);
 	}
 	f_r = row, f_c=col;
 	processfood(row,col, true);
@@ -154,8 +178,8 @@ void game(){
 		int prev_h_r = h_r, prev_h_c = h_c; // 1. get new head
 		moveHead(1);		// 2. move head
 		char suppose = position[h_r][h_c];
-		if(h_r>=0 && h_r<48 && h_c >=0 && h_c<64)
-		position[h_r][h_c] = 'P';
+		if(h_r>=0 && h_r<EDGE_R && h_c >=0 && h_c<EDGE_C && position[h_r][h_c] != 'O') position[h_r][h_c] = 'P';
+		else rip();
 		// printf("%c \n", suppose);
 		snakeTraverser();		// 3. move tail
 		
@@ -174,12 +198,16 @@ void game(){
 			printf("processedFood\n");
 			int a = MIN(h_r, prev_h_r),b = MAX(h_r, prev_h_r);
 			for (int i =a; i <b; i++){
-				if(i<EDGE_R && i>=0)position[i][h_c] = 'P';
+				if (i==prev_h_r){}
+				else if(i<EDGE_R && i>=0 && position[i][h_c]!='O')position[i][h_c] = 'P';
+				else rip();
 			}		
 			printf("realmoveR\n");
 			a = MIN(h_c, prev_h_c),b = MAX(h_c, prev_h_c);
 			for (int i =a; i <b; i++){
-				if(i<EDGE_C && i>=0) position[h_r][i] = 'P';
+				if (i==prev_h_c){}
+				else if(i<EDGE_C && i>=0 &&  position[h_r][i]!='O') position[h_r][i] = 'P';
+				else rip();
 			}
 			
 			printf("realmoveL\n");
@@ -193,16 +221,13 @@ void game(){
 		}
 		
 		
-		if(h_r<0 || h_c<0 || h_r>=EDGE_R || h_c >=EDGE_C){
-			 loose = true;
-			 LCDoops();
-		}
-		
+		if(h_r<0 || h_c<0 || h_r>=EDGE_R || h_c >=EDGE_C)rip(); // still need? 
 		LCDdraw();
-		
-		osDelay(osKernelGetTickFreq()/10);
+		printf("Speed %d\n", (osKernelGetTickFreq()/speed));
+		osDelay(osKernelGetTickFreq()/speed);
 		int man = 1;
 		while(man>0){
+			
 			if(loose) man = 100;
 			man--;
 		}
@@ -231,9 +256,10 @@ int LCDdraw() {
 
 // JoyStick 
 void JOYvalue(){ 
-	printf("INTO\n");
+	// printf("INTO\n");
 	long val = LPC_GPIO1->FIOPIN;
 	while (true){
+		gas++;
 		val = LPC_GPIO1->FIOPIN;
 		for (int i =1; i <=4; i++) {
 			if(!(val&1<<(22+i))) {
@@ -242,7 +268,7 @@ void JOYvalue(){
 				if (i==direction || i+2==direction || i-2==direction){
 						// printf("REAP\n");
 				} else {
-					printf("YOLO %d \n", i);
+					// printf("YOLO %d \n", i);
 						direction = i;
 				}
 			}
